@@ -10,14 +10,23 @@ export class HomeComponent {
 
   newReleases: any[] = [];
   loading: boolean;
+  error: boolean;
+  errorMessage: string;
 
   constructor(private spotify: SpotifyService) {
     this.loading = true;
+    this.error = false;
+
     this.spotify.getNewReleases()
       .subscribe((data: any) => {
         this.loading = false;
         this.newReleases = data;
-      });
+      }, (serviceError) => {
+        this.loading = false;
+        this.error = true;
+        this.errorMessage = serviceError.error.error.message;
+      },
+    );
   }
 
 }
